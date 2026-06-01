@@ -1,3 +1,4 @@
+
 export const getTasks = async () => {
     try {
         const response = await fetch("/api/todolist");
@@ -7,13 +8,13 @@ export const getTasks = async () => {
         return data
     } catch (error) {
         console.error("Error papi")
-    }   
+    }
 };
 
-export const deleteTasks = async (id: string) =>{
+export const deleteTasks = async (id: string) => {
     try {
-        const response = await fetch(`/api/todolist/${id}`,{
-            method: "DELETE",
+        const response = await fetch(`/api/todolist/${id}`, {
+            method: "DELETE"
         });
         const dato = await response.json();
 
@@ -22,3 +23,43 @@ export const deleteTasks = async (id: string) =>{
         console.error("Error papi")
     }
 };
+
+export const addTasks = async (title: string) => {
+    try {
+        const id = crypto.randomUUID();
+        const state = "pending"
+
+        const res = await fetch('/api/todolist', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, id, state })
+        });
+        const data = await res.json();
+
+        if (!data) console.log("Errror al mandar los datos")
+
+        return data
+    } catch (error) {
+        console.log("Error papi")
+    }
+
+};
+
+export const updatetasks = async (id: string,title: string) => {
+    try {
+        const res = await fetch(`/api/todolist/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title })
+        });
+
+        const data = await res.json();
+
+        if(!res) return console.log("Error al actualizar")
+        
+        return data
+
+    } catch (error) {
+        console.log("Error papi")
+    }
+}

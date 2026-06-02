@@ -1,6 +1,6 @@
 import Todolist from "@/database/model/todoList";
 import { conectionDB } from "@/lib/database";
-import { NextResponse, NextRequest} from "next/server";
+import { NextResponse} from "next/server";
 
 await conectionDB();
 

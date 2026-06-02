@@ -45,7 +45,7 @@ export const addTasks = async (title: string) => {
 
 };
 
-export const updatetasks = async (id: string,title: string) => {
+export const updatetasks = async (id: string, title: string) => {
     try {
         const res = await fetch(`/api/todolist/${id}`, {
             method: "PATCH",
@@ -55,11 +55,30 @@ export const updatetasks = async (id: string,title: string) => {
 
         const data = await res.json();
 
-        if(!res) return console.log("Error al actualizar")
-        
+        if (!res) return console.log("Error al actualizar")
+
         return data
 
     } catch (error) {
         console.log("Error papi")
-    }
+    };
+};
+
+export const updateState = async (id: string, newState: "pending" | "inProgress" | "done", date: {startDate?: number; endDate?: number}= {}) => {
+    try {
+        const res = await fetch(`/api/todolist/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ state: newState, ...date })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) return console.log("Error al actualizar")
+
+        return data
+
+    } catch (error) {
+        console.log("Error papi")
+    };
 }

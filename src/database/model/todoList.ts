@@ -15,11 +15,11 @@ const todoListSchema = new Schema<todoListProps>({
         required: [true, "The state is required"]
     },
     startDate:{
-        type: Date,
+        type: Number,
         
     },
     endDate:{
-        type: Date,
+        type: Number,
        
     }
 });

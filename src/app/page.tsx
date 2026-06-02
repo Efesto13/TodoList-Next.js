@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/Card";
 import { todoListProps } from "@/interface_type/todolisto"
-import { getTasks, deleteTasks, addTasks } from "@/services/task";
+import { getTasks, deleteTasks, addTasks, updateState } from "@/services/task";
 import { useRouter } from "next/navigation";
 
 
@@ -21,7 +21,9 @@ function Home() {
       if (resultado && resultado.data) {
         const nuevaTarea = {
           ...resultado.data,
-          id: resultado.data.id || resultado.data._id
+          id: resultado.data.id || resultado.data._id,
+          startDate: undefined,
+          endDate: undefined
         };
         setTodoList([...todoList, nuevaTarea]);
 
@@ -37,22 +39,18 @@ function Home() {
 
 
 
-  const startTask = (id: string) => {
-    const taskFound = todoList.find((task) => task.id == id);
-    if (taskFound) {
-      taskFound.state = "inProgress";
-      taskFound.startDate = Date.now();
-    }
-    setTodoList([...todoList]);
+  const startTask = async (id: string) => { 
+    const date = Date.now()
+    const resultado = await updateState(id, "inProgress", {startDate: date,
+      endDate: date
+    });
+    if(resultado) setTodoList((list)=> list.map((task) => task.id === id ? {...task, state: "inProgress", startDate: date}: task ));
   };
 
-  const endTask = (id: string) => {
-    const taskFound = todoList.find((task) => task.id == id);
-    if (taskFound) {
-      taskFound.state = "done";
-      taskFound.endDate = Date.now();
-    }
-    setTodoList([...todoList]);
+  const endTask = async (id: string) => {
+    const date = Date.now();
+    const resultado = await updateState(id, "done", {endDate: date});
+    if(resultado) setTodoList((list)=> list.map((task)=> task.id === id ? {...task, state: "done", endDate: date}: task));
   };
 
   const deleteTask = async (id: string) => {

@@ -26,12 +26,17 @@ export async function DELETE(req: NextRequest,{ params }: { params: { id: string
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         const { id } = await params
-        const { title } = await req.json();
+        const body = await req.json();
+
+
+        if(!id) return NextResponse.json({mensagge: "No se encontro el id"})
+
         const data = await Todolist.findOneAndUpdate( 
             { id: id },
-            { title: title },
+            { $set: body },
             { new: true }
         );
+
 
         if (!data) return NextResponse.json({ error: "Falla en actualizar los datos", data: data }, { status: 400 });
 
